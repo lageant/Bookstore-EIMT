@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Purchase info</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/styles.css}">
+</head>
+<body>
+<th:block th:include="/_header"></th:block>
+<div class="container">
+    Purchase details
+    <span th:text="${'Tracking number: ' + chargeRequest.getId().toString()}"></span><br>
+    <span th:text="${'Time of purchase: ' + chargeRequest.getTime_stamp().toString()}"></span><br>
+    <span th:text="${'Description: ' + chargeRequest.getDescription()}"></span><br>
+    <span th:text="${'Email: ' + chargeRequest.getStripeEmail()}"></span><br>
+    <span th:text="${'Amount: ' + chargeRequest.getAmount()/100 + chargeRequest.getCurrency().toString()}"></span><br>
+</div>
+<div th:if="${orderList != null}">
+    Products ordered
+    <ul class="list-group" >
+        <li th:each="order, iter : ${orderList}" class="list-group-item list-group-item-default">
+            <span th:text="${iter.count}"></span>
+            <!--<span th:text="${'Product id: ' + order.getProduct().id}"></span>-->
+            <span th:text="${'Product name:' + order.getProduct().name}"></span>
+            <span th:text="${'Product price: ' + order.getProduct().price.toString()}"></span>
+            <span th:text="${'Quantity: ' + order.getQuantity().toString()}"></span>
+        </li>
+    </ul>
+</div>
+<form action="#" th:action="@{/profilePage}" method="get">
+    <input type="submit" name="show" value="Return to Profile Page">
+</form>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Products</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/styles.css}">
+</head>
+<body>
+<main>
+    <th:block th:include="/_header"></th:block>
+    <div class="container">
+        <ul class="list-group" >
+            <li th:each="p : ${productPage.content}" class="list-group-item list-group-item-default">
+                <picture><img th:src="@{${p.picture_link}}"></picture><br>
+                <span th:text="${'Name:' + p.name}"></span>
+                <span th:text="${'Price:' + p.price.toString()}"></span>
+                <a th:href="@{'/product/' + ${p.id}}" th:text="${'More details'}"></a>
+                <div th:if="${#request.isUserInRole('ROLE_USER')}">
+                    <form action="#" th:action="@{/products}" th:object="${orderForm}" method="post">
+                        <input type="hidden" name="product_id" th:attr="value = ${p.getId()}"/>
+                        <input type="hidden" name="username" th:attr="value = ${#request.getUserPrincipal().getName()}"/>
+                        <input type="number" name="quantity" th:attr="value = ${1}"/>
+                        <span th:if="${#fields.hasErrors('quantity') && orderForm.getProduct_id() == p.getId()}" th:errors="*{quantity}">Quantity error</span>
+                        <input type="submit" name="addOrder" value="Add to Cart">
+                    </form>
+                </div>
+                <div th:if="${#request.isUserInRole('ROLE_ADMIN')}">
+                    <form action="#" th:action="@{/products}" th:object="${product_id}" method="post">
+                        <input type="hidden" name="order_id" th:attr="value = ${p.getId()}"/>
+                        <input type="submit" name="delete" value="Delete Product">
+                    </form>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div th:if="${productPage.totalPages > 0}" class="pagination"
+         th:each="pageNumber : ${pageNumbers}">
+        <a th:href="@{/products(size=${productPage.size}, page=${pageNumber})}"
+           th:text="${pageNumber}"
+           th:class="${pageNumber==productPage.number + 1} ? active"></a>
+    </div>
+</main>
+</body>
+</html>

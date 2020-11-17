@@ -1,0 +1,16 @@
+<div class="header-container"
+     xmlns:th="http://www.thymeleaf.org"
+     xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+
+    <div class="site-name"><a style="color:white; text-decoration:none" th:href="@{/products}">Online Bookstore</a></div>
+
+    <div class="header-bar">
+        <th:block sec:authorize="isAuthenticated()">
+            Hello
+            <a th:href="@{/profilePage}" th:utext="${#request.userPrincipal.name}">..</a>
+            &nbsp;|&nbsp;
+            <a th:href="@{/logout}">Logout</a>
+        </th:block>
+    </div>
+
+</div>

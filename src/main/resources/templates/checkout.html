@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns='http://www.w3.org/1999/xhtml' xmlns:th='http://www.thymeleaf.org'>
+<head>
+    <title>Checkout</title>
+    <style>
+        body {
+            font-family: 'arial';
+        }
+        #checkout-form input,
+        #checkout-form button {
+            display: block;
+            margin: 12px;
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" th:href="@{/styles.css}">
+</head>
+<body>
+<th:block th:include="/_header"></th:block>
+<form th:action="@{/charge/{id}(id=${cart_id})}" method='POST' id='checkout-form'>
+    <input type='hidden' th:value='${amount}' name='amount' />
+    <label>Price:<span th:text='${amount/100}' /></label>
+    <script
+            src='https://checkout.stripe.com/checkout.js'
+            class='stripe-button'
+            th:attr='data-key=${stripePublicKey},
+                         data-amount=${amount},
+                         data-currency=${currency}'
+            data-name='Online Bookstore'
+            data-description='Please enter your credentials'
+            data-image='https://images.vexels.com/media/users/3/157555/isolated/preview/2b48b29abd18febe3b1f92a85913ce39-simple-book-icon-by-vexels.png'
+            data-locale='auto'
+            data-zip-code='false'
+    >
+    </script>
+</form>
+</body>
+</html>

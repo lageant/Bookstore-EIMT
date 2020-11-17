@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Categories</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/styles.css}">
+</head>
+<body>
+<main>
+    <th:block th:include="/_header"></th:block>
+    <div class="container">
+        <ul class="list-group" >
+            <li th:each="c : ${CategoryList}" class="list-group-item list-group-item-default">
+                <span th:text="${c.name}"></span>
+                <form action="#" th:action="@{/categories}" th:object="${category_id}" method="post">
+                    <input type="hidden" name="order_id" th:attr="value = ${c.getId()}"/>
+                    <input type="submit" name="delete" value="Delete Category">
+                </form>
+            </li>
+        </ul>
+    </div>
+</main>
+</body>
+</html>

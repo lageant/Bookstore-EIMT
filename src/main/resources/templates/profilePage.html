@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title th:utext="${#request.userPrincipal.name +'''s Profile Page'}"></title>
+    <link rel="stylesheet" type="text/css" th:href="@{/styles.css}">
+</head>
+<body>
+<main>
+    <th:block th:include="/_header"></th:block>
+    Profile page
+    <div th:if="${#request.isUserInRole('ROLE_USER')}">
+        <div class="container">
+            <div th:if="${currentCartOrders != null}">
+                <ul class="list-group" >
+                    <li th:each="order : ${currentCartOrders}" class="list-group-item list-group-item-default">
+                        <span th:text="${'Name:'+order.getProduct().getName()}"></span>
+                        <span th:text="${'Quantity:'+order.getQuantity().toString()}"></span>
+
+                        <form action="#" th:action="@{/profilePage}" th:object="${newOrder}" method="post">
+                            <input type="number" name="quantity" th:attr="value = ${order.getQuantity()}"/>
+                            <input type="hidden" name="order_id" th:attr="value = ${order.getId()}"/>
+                            <input type="submit" name="update" value="Update Order">
+                            <span th:if="${#fields.hasErrors('quantity')}" th:errors="*{quantity}">Quantity error</span>
+                        </form>
+                        <form action="#" th:action="@{/profilePage}" th:object="${newOrder}" method="post">
+                            <input type="hidden" name="order_id" th:attr="value = ${order.getId()}"/>
+                            <input type="submit" name="delete" value="Delete Order">
+                        </form>
+                    </li>
+                </ul>
+            </div>
+
+            <div th:if="${currentCartOrders == null}">
+                <span>Current cart is empty</span>
+            </div>
+        </div>
+        <div class="container" th:if="${currentCartOrders != null}">
+
+            <form action="#" th:action="@{/profilePage}" method="post">
+            <input type="submit" name="checkout" value="Checkout">
+            </form>
+        </div>
+        <div class="container">
+            Order history
+            <div th:if="${cartHistory != null}">
+                <ul class="list-group" >
+                    <li th:each="cart : ${cartHistory}" class="list-group-item list-group-item-default">
+                        <span th:text="${'Tracking number: ' + cart.getChargeRequest().getId()}"></span>
+                        <span th:text="${'Time of purchase: ' + cart.getChargeRequest().getTime_stamp().toString()}"></span>
+                        <span th:text="${'Amount: ' + cart.getChargeRequest().getAmount()/100
+                         + cart.getChargeRequest().getCurrency().toString()}"></span>
+                        <form action="#" th:action="@{/purchaseHistory/{id}(id=${cart.getId()})}" method="get">
+                            <input type="submit" name="show" value="More Info">
+                        </form>
+                    </li>
+                </ul>
+             </div>
+            <div th:if="${cartHistory == null}">
+                <span>Order history is empty</span>
+            </div>
+         </div>
+    </div>
+    <div th:if="${#request.isUserInRole('ROLE_ADMIN')}">
+        <a style="text-decoration:none" th:href="@{/products/add}">Add a new product</a></br>
+        <a style="text-decoration:none" th:href="@{/categories/add}">Add a new category</a></br>
+        <a style="text-decoration:none" th:href="@{/authors/add}">Add a new author</a></br>
+        <a style="text-decoration:none" th:href="@{/products}">Show products</a></br>
+        <a style="text-decoration:none" th:href="@{/categories}">Show categories</a></br>
+        <a style="text-decoration:none" th:href="@{/authors}">Show authors</a></br>
+    </div>
+</main>
+</body>
+</html>

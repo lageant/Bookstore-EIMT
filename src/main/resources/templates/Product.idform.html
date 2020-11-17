@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Product info</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/styles.css}">
+</head>
+<body>
+<th:block th:include="/_header"></th:block>
+<div class="container">
+    <span th:text="${'Name: ' + product.name}"></span><br>
+    <span th:text="${'Description: ' + product.description}"></span><br>
+    <span th:text="${'Picture link: '}"></span><br>
+    <picture><img th:src="@{${product.picture_link}}"></picture><br>
+    <span th:text="${'Category: ' + product.category.name}"></span><br>
+    <span th:text="${'Author: ' + product.author.name}"></span><br>
+    <span th:text="${'Price: ' + product.price.toString()}"></span><br>
+</div>
+<form action="#" th:action="@{/product/{id}(id=${product.id})}" th:object="${orderForm}" method="post">
+    <input type="number" name="quantity" th:attr="value = ${1}" />
+    <span th:if="${#fields.hasErrors('quantity')}" th:errors="*{quantity}">Quantity error</span>
+    <input type="hidden" name="product_id" th:attr="value = ${product.getId()}"/>
+    <input type="hidden" name="username" th:attr="value = ${#request.getUserPrincipal().getName()}"/>
+    <input type="submit" name="addOrder" value="Add to Cart">
+</form>
+</body>
+</html>
